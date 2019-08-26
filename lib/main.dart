@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'PlatformsPage.dart';
 import 'net/api.dart';
 
 void main() => runApp(MyApp());
@@ -23,6 +24,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Demo'),
+      routes: {
+        '/home': (context) => MyApp(),
+        '/platforms/summary': (context) => PlatformsPage(),
+      },
     );
   }
 }
@@ -48,30 +53,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _counter = "0";
 
-  void _incrementCounter() {
-    API.get_crypto_percent("btc").then((percent) {
+  void _refreshPercentBTC() {
+    API.getCryptoPercent("btc").then((percent) {
       setState(() {
-        print("-----------------" + percent);
+        print("--" + percent);
         var percentDouble = double.parse(percent) * 100;
         _counter = percentDouble.toStringAsFixed(2);
       });
     });
+  }
 
-//    setState(() {
-//      // This call to setState tells the Flutter framework that something has
-//      // changed in this State, which causes it to rerun the build method below
-//      // so that the display can reflect the updated values. If we changed
-//      // _counter without calling setState(), then the build method would not be
-//      // called again, and so nothing would appear to happen.
-//      _counter = _counter + "1";
-//    });
+  void _gotoPlatformsPage() {
+    Navigator.pushNamed(context, '/platforms/summary');
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _incrementCounter();
+    _refreshPercentBTC();
   }
 
   @override
@@ -92,13 +91,14 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           new ListTile(
             title: new Text('大饼占比 ' + '$_counter' + '%'),
-            onTap: _incrementCounter,
+            onTap: _refreshPercentBTC,
           ),
           new ListTile(
             title: new Text('币种排序'),
           ),
           new ListTile(
             title: new Text('平台排序'),
+            onTap: _gotoPlatformsPage,
           )
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
