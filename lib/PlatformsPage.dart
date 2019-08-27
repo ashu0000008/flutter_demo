@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'PlatformPage.dart';
 import 'net/api.dart';
 
 class PlatformsPage extends StatefulWidget {
@@ -19,6 +20,17 @@ class _PlatformsPageState extends State<PlatformsPage> {
     });
   }
 
+  void _goPlatformPage(int index) {
+    if (0 == index) {
+      return;
+    }
+
+    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+      var platform = mData[index - 1].symbol;
+      return new PlatformPage(platform);
+    }));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,19 +47,13 @@ class _PlatformsPageState extends State<PlatformsPage> {
       ),
       body: new ListView.builder(
         itemCount: mData.length + 1,
-//          itemBuilder: (context, index){
-//            return new ListTile(
-//              title: new Text('${mData[index].symbol}'),
-//
-//            );
-//          }
         itemBuilder: (context, index) {
           var symbol;
           var cap;
           var num;
           if (0 == index) {
             symbol = "平台名称";
-            cap = "市值(美元)";
+            cap = "代币总市值(美元)";
             num = "代币个数";
           } else {
             symbol = '${mData[index - 1].symbol}';
@@ -57,27 +63,32 @@ class _PlatformsPageState extends State<PlatformsPage> {
 
           return new Container(
             margin: new EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: new Row(
-              children: <Widget>[
-                Expanded(
-                  child: new Text(symbol),
-                  flex: 20,
-                ),
-                Expanded(
-                  child: new Text(
-                    cap,
-                    textAlign: TextAlign.end,
+            child: new GestureDetector(
+              onTap: () {
+                _goPlatformPage(index);
+              },
+              child: new Row(
+                children: <Widget>[
+                  Expanded(
+                    child: new Text(symbol),
+                    flex: 20,
                   ),
-                  flex: 20,
-                ),
-                Expanded(
-                  child: new Text(
-                    num,
-                    textAlign: TextAlign.end,
+                  Expanded(
+                    child: new Text(
+                      cap,
+                      textAlign: TextAlign.end,
+                    ),
+                    flex: 20,
                   ),
-                  flex: 12,
-                ),
-              ],
+                  Expanded(
+                    child: new Text(
+                      num,
+                      textAlign: TextAlign.end,
+                    ),
+                    flex: 12,
+                  ),
+                ],
+              ),
             ),
           );
         },
