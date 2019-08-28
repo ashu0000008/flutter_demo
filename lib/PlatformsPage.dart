@@ -51,14 +51,18 @@ class _PlatformsPageState extends State<PlatformsPage> {
           var symbol;
           var cap;
           var num;
+          var seq;
+
           if (0 == index) {
             symbol = "平台名称";
             cap = "代币总市值(美元)";
             num = "代币个数";
+            seq = "排序";
           } else {
             symbol = '${mData[index - 1].symbol}';
             cap = mData[index - 1].cap.toStringAsFixed(2);
             num = '${mData[index - 1].num}';
+            seq = index.toString();
           }
 
           return new Container(
@@ -70,8 +74,12 @@ class _PlatformsPageState extends State<PlatformsPage> {
               child: new Row(
                 children: <Widget>[
                   Expanded(
+                    child: new Text(seq),
+                    flex: 6,
+                  ),
+                  Expanded(
                     child: new Text(symbol),
-                    flex: 20,
+                    flex: 18,
                   ),
                   Expanded(
                     child: new Text(

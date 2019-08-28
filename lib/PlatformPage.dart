@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'net/api.dart';
 
 class PlatformPage extends StatefulWidget {
-  var platform;
+  final String  platform;
 
   @override
   _PlatformPageState createState() => _PlatformPageState(platform);
@@ -38,16 +38,10 @@ class _PlatformPageState extends State<PlatformPage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("平台排行榜"),
+        title: Text(platform+"平台代币列表"),
       ),
       body: new ListView.builder(
         itemCount: mData.length + 1,
-//          itemBuilder: (context, index){
-//            return new ListTile(
-//              title: new Text('${mData[index].symbol}'),
-//
-//            );
-//          }
         itemBuilder: (context, index) {
           var symbol;
           var cap;

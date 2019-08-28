@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'PercentChartPage.dart';
 import 'PlatformsPage.dart';
 import 'net/api.dart';
 
@@ -67,6 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pushNamed(context, '/platforms/summary');
   }
 
+  void _gotoPercentPageBTC() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+      return new PercentChartPage("BTC");
+    }));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           new ListTile(
             title: new Text('大饼占比 ' + '$_counter' + '%'),
-            onTap: _refreshPercentBTC,
+            onTap: _gotoPercentPageBTC,
           ),
           new ListTile(
             title: new Text('币种排序'),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import 'entry/CryptoPercent.dart';
 import 'entry/CryptoPlatform.dart';
 import 'entry/CryptoPlatformInfo.dart';
 import 'urls.dart';
@@ -32,25 +33,40 @@ class API {
     return _content;
   }
 
+  static Future<List<CryptoPercent>> getCryptoPercentHistory(
+      String symbol) async {
+    Dio dio = getDio();
+    var url =
+        ApiUrls.url_get_crypto_percent_history.replaceAll(":symbol", symbol);
+    var response = await dio.get(url);
+    String _content = response.data.toString();
+
+    List responseJson = json.decode(_content);
+    List<CryptoPercent> result =
+        responseJson.map((m) => new CryptoPercent.fromJson(m)).toList();
+    return result;
+  }
+
   static Future<List<CryptoPlatform>> getPlatformSummary() async {
     Dio dio = getDio();
     var response = await dio.get(ApiUrls.url_get_platforms_summary);
     String _content = response.data.toString();
 
     List responseJson = json.decode(_content);
-    List<CryptoPlatform> platforms =
+    List<CryptoPlatform> result =
         responseJson.map((m) => new CryptoPlatform.fromJson(m)).toList();
-    return platforms;
+    return result;
   }
 
-  static Future<List<CryptoPlatformInfo>> getPlatformInfo(String platform) async {
+  static Future<List<CryptoPlatformInfo>> getPlatformInfo(
+      String platform) async {
     Dio dio = getDio();
-    var response = await dio.get(ApiUrls.url_get_platform_info+platform);
+    var response = await dio.get(ApiUrls.url_get_platform_info + platform);
     String _content = response.data.toString();
 
     List responseJson = json.decode(_content);
-    List<CryptoPlatformInfo> tokens =
-    responseJson.map((m) => new CryptoPlatformInfo.fromJson(m)).toList();
-    return tokens;
+    List<CryptoPlatformInfo> result =
+        responseJson.map((m) => new CryptoPlatformInfo.fromJson(m)).toList();
+    return result;
   }
 }
