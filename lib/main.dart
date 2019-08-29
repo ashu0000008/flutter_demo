@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'PercentChartPage.dart';
 import 'PlatformsPage.dart';
 import 'net/api.dart';
+import 'ws/WSManager.dart';
 
 void main() => runApp(MyApp());
 
@@ -74,6 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }));
   }
 
+  void _wstest(){
+    WSManager.instance;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new ListTile(
             title: new Text('币种排序'),
+            onTap: _wstest,
           ),
           new ListTile(
             title: new Text('平台排序'),
