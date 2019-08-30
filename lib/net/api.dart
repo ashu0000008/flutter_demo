@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_id/device_id.dart';
 import 'package:dio/dio.dart';
 
 import 'entry/CryptoPercent.dart';
@@ -11,9 +12,15 @@ import 'urls.dart';
 class API {
   static Dio mDio;
 
-  static Dio getDio() {
+  static Future<Dio> getDio() async{
+    String deviceId = await DeviceId.getID;
     if (null == mDio) {
       mDio = new Dio();
+      mDio.interceptors
+          .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
+        //添加统一的请求头
+        options.headers["deviceId"] = deviceId;
+      }));
       (mDio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
           (client) {
         client.badCertificateCallback =
@@ -27,7 +34,7 @@ class API {
   }
 
   static Future<String> getCryptoPercent(String symbol) async {
-    Dio dio = getDio();
+    Dio dio = await getDio();
     var response = await dio.get(ApiUrls.url_get_crypto_percent + symbol);
     String _content = response.data.toString();
     return _content;
@@ -35,7 +42,7 @@ class API {
 
   static Future<List<CryptoPercent>> getCryptoPercentHistory(
       String symbol) async {
-    Dio dio = getDio();
+    Dio dio = await getDio();
     var url =
         ApiUrls.url_get_crypto_percent_history.replaceAll(":symbol", symbol);
     var response = await dio.get(url);
@@ -48,7 +55,7 @@ class API {
   }
 
   static Future<List<CryptoPlatform>> getPlatformSummary() async {
-    Dio dio = getDio();
+    Dio dio = await getDio();
     var response = await dio.get(ApiUrls.url_get_platforms_summary);
     String _content = response.data.toString();
 
@@ -60,7 +67,7 @@ class API {
 
   static Future<List<CryptoPlatformInfo>> getPlatformInfo(
       String platform) async {
-    Dio dio = getDio();
+    Dio dio = await getDio();
     var response = await dio.get(ApiUrls.url_get_platform_info + platform);
     String _content = response.data.toString();
 
