@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:device_id/device_id.dart';
 import 'package:dio/dio.dart';
 
 import 'entry/CryptoPercent.dart';
@@ -9,16 +8,21 @@ import 'entry/CryptoPlatform.dart';
 import 'entry/CryptoPlatformInfo.dart';
 import 'urls.dart';
 
+import 'package:uuid_enhanced/uuid.dart';
+
 class API {
   static Dio mDio;
 
-  static Future<Dio> getDio() async{
-    String deviceId = await DeviceId.getID;
+  static Future<Dio> getDio() async {
+
     if (null == mDio) {
+      /// 获取手机的UUID
+      String deviceId = Uuid.fromName('www.ashu.xyz', namespace: Uuid.NAMESPACE_URL).toString();
       mDio = new Dio();
       mDio.interceptors
           .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
         //添加统一的请求头
+
         options.headers["deviceId"] = deviceId;
       }));
       (mDio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
