@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'PercentChartPage.dart';
+import 'CoinListPage.dart';
 import 'PlatformsPage.dart';
 import 'net/api.dart';
 import 'ws/WSManager.dart';
@@ -75,6 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }));
   }
 
+  void _gotoCoinListPage(){
+    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+      return new CoinListPage();
+    }));
+  }
+
   void _wstest(){
     WSManager.instance;
   }
@@ -107,11 +114,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new ListTile(
             title: new Text('币种排序'),
-            onTap: _wstest,
+            onTap: _gotoCoinListPage,
           ),
           new ListTile(
             title: new Text('平台排序'),
             onTap: _gotoPlatformsPage,
+          ),
+          new ListTile(
+            title: new Text('收藏'),
           )
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.

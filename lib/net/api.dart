@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import 'entry/CryptoCoinInfo.dart';
 import 'entry/CryptoPercent.dart';
 import 'entry/CryptoPlatform.dart';
 import 'entry/CryptoPlatformInfo.dart';
@@ -78,6 +79,17 @@ class API {
     List responseJson = json.decode(_content);
     List<CryptoPlatformInfo> result =
         responseJson.map((m) => new CryptoPlatformInfo.fromJson(m)).toList();
+    return result;
+  }
+
+  static Future<List<CryptoCoin>> getCryptoList(int page, int size) async {
+    Dio dio = await getDio();
+    var response = await dio.get(ApiUrls.url_get_crypto_list, queryParameters: {"page":page, "size":size});
+    String _content = response.data.toString();
+
+    List responseJson = json.decode(_content);
+    List<CryptoCoin> result =
+    responseJson.map((m) => new CryptoCoin.fromJson(m)).toList();
     return result;
   }
 }
