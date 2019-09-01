@@ -11,6 +11,7 @@ class CoinListPage extends StatefulWidget {
 
 class _CoinListPageState extends State<CoinListPage> {
   var mData = new List();
+  var mFavorite = new Map();
 
   void _refreshData() {
     API.getCryptoList(0, 300).then((result) {
@@ -21,22 +22,37 @@ class _CoinListPageState extends State<CoinListPage> {
     });
   }
 
-  void _getFavoriteList() {}
+  void _getFavoriteList() {
+    API.getFavorite().then((result) {
+      setState(() {
+        mFavorite.clear();
+        result.forEach((favorite) {
+          mFavorite[favorite.symbol] = true;
+        });
+      });
+    });
+  }
 
   bool _isFavorite(String symbol) {
-    return false;
+    return mFavorite.containsKey(symbol);
   }
 
   void _addFavorite(String symbol) {
-    API.addFavorite(symbol).then((result){
-      print(result);
+    API.addFavorite(symbol).then((result) {
+      _getFavoriteList();
+    });
+  }
+
+  void _removeFavorite(String symbol) {
+    API.removeFavorite(symbol).then((result) {
+      _getFavoriteList();
     });
   }
 
   void _changeFavorite(String symbol) {
-    if (_isFavorite(symbol)){
-      _addFavorite(symbol);
-    }else{
+    if (_isFavorite(symbol)) {
+      _removeFavorite(symbol);
+    } else {
       _addFavorite(symbol);
     }
   }
@@ -45,6 +61,7 @@ class _CoinListPageState extends State<CoinListPage> {
   void initState() {
     super.initState();
     _refreshData();
+    _getFavoriteList();
   }
 
   @override
@@ -80,7 +97,9 @@ class _CoinListPageState extends State<CoinListPage> {
             seq = index.toString();
 
             if (_isFavorite(symbol)) {
-              favWidget = Icon(Icons.favorite);
+              favWidget = Icon(
+                Icons.favorite,
+              );
             } else {
               favWidget = new Text("  ");
             }
@@ -88,7 +107,7 @@ class _CoinListPageState extends State<CoinListPage> {
 
           return new GestureDetector(
             onTap: () {
-              if ("代币名称" != symbol){
+              if ("代币名称" != symbol) {
                 _changeFavorite(symbol);
               }
             },

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import 'entry/CryptoFavorite.dart';
 import 'entry/CryptoCoinInfo.dart';
 import 'entry/CryptoPercent.dart';
 import 'entry/CryptoPlatform.dart';
@@ -98,5 +99,23 @@ class API {
     var response = await dio.post(ApiUrls.url_post_favorite, data: FormData.from({"symbol":symbol}));
     print(response);
     return true;
+  }
+
+  static Future<bool> removeFavorite(String symbol) async{
+    Dio dio = await getDio();
+    var response = await dio.delete(ApiUrls.url_remove_favorite, data: FormData.from({"symbol":symbol}));
+    print(response);
+    return true;
+  }
+
+  static Future<List<CryptoFavorite>> getFavorite() async{
+    Dio dio = await getDio();
+    var response = await dio.get(ApiUrls.url_get_favorite);
+    String _content = response.data.toString();
+
+    List responseJson = json.decode(_content);
+    List<CryptoFavorite> result =
+    responseJson.map((m) => new CryptoFavorite.fromJson(m)).toList();
+    return result;
   }
 }
