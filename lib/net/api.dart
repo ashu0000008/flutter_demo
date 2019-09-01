@@ -92,4 +92,11 @@ class API {
     responseJson.map((m) => new CryptoCoin.fromJson(m)).toList();
     return result;
   }
+
+  static Future<bool> addFavorite(String symbol) async{
+    Dio dio = await getDio();
+    var response = await dio.post(ApiUrls.url_post_favorite, data: FormData.from({"symbol":symbol}));
+    print(response);
+    return true;
+  }
 }

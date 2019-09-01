@@ -7,5 +7,8 @@ class ApiUrls{
   static const String url_get_crypto_percent_history = base_url + "/percent/:symbol/history";
 
   static const String url_get_crypto_list = base_url + "/crypto/rank";
+  static const String url_post_favorite = base_url + "/favorite";
+  static const String url_remove_favorite = base_url + "/favorite";
+  static const String url_get_favorite = base_url + "/favorite";
 }
 
