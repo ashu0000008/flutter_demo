@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'PercentChartPage.dart';
 import 'CoinListPage.dart';
+import 'FavoriteListPage.dart';
+import 'PercentChartPage.dart';
 import 'PlatformsPage.dart';
 import 'net/api.dart';
 import 'ws/WSManager.dart';
@@ -76,13 +77,19 @@ class _MyHomePageState extends State<MyHomePage> {
     }));
   }
 
-  void _gotoCoinListPage(){
+  void _gotoCoinListPage() {
     Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
       return new CoinListPage();
     }));
   }
 
-  void _wstest(){
+  void _gotoFavoriteListPage() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+      return new FavoriteListPage();
+    }));
+  }
+
+  void _wstest() {
     WSManager.instance;
   }
 
@@ -122,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new ListTile(
             title: new Text('收藏'),
+            onTap: _gotoFavoriteListPage,
           )
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
