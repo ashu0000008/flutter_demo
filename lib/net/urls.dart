@@ -1,6 +1,9 @@
 class ApiUrls{
+  static const String ws_url = "ws://ashu.xyz:9000/ws";
+  static const String ws_url1 = "ws://192.168.100.9:9000/ws";
+
   static const String base_url = "https://ashu.xyz";
-  static const String base_url1 = "https://10.10.1.203";
+  static const String base_url1 = "https://192.168.100.9";
   static const String url_get_crypto_percent = base_url + "/percent/";
   static const String url_get_platforms_summary = base_url + "/platforms/summary";
   static const String url_get_platform_info = base_url + "/platform/";

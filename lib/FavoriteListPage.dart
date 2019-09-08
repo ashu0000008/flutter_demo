@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'net/api.dart';
+import 'ws/WSManager.dart';
+import 'net/entry/CryptoFavorite.dart';
 
 class FavoriteListPage extends StatefulWidget {
   @override
@@ -11,19 +13,57 @@ class FavoriteListPage extends StatefulWidget {
 
 class _FavoriteListPageState extends State<FavoriteListPage> {
   var mData = new List();
+  var mDataMap = new Map();
 
   void _getFavoriteList() {
     API.getFavorite().then((result) {
       setState(() {
         mData = result;
       });
+      _subWS();
     });
+  }
+
+  void _subWS(){
+    for (CryptoFavorite item in mData){
+      WSManager.instance.sub(item.symbol);
+    }
   }
 
   @override
   void initState() {
     super.initState();
     _getFavoriteList();
+    WSManager.instance.init();
+    WSManager.instance.registerCallback(_wsDataReceive);
+  }
+
+  void _wsDataReceive(String data){
+    List<String> tmp = data.split("-");
+    if (tmp.length != 2){
+      return;
+    }
+
+    String symbol;
+    if ("btcusdt" == tmp[0]){
+      symbol = "BTC";
+    }else if (tmp[0].endsWith("btc")){
+      symbol = tmp[0].substring(0, tmp[0].length - 3).toUpperCase();
+    }else{
+      return;
+    }
+
+    setState(() {
+      mDataMap[symbol] = tmp[1];
+    });
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    WSManager.instance.uninit();
+    WSManager.instance.unRegisterCallback(_wsDataReceive);
   }
 
   @override
@@ -32,7 +72,7 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("代币列表"),
+        title: Text("关注列表"),
       ),
       body: new ListView.builder(
         itemCount: mData.length + 1,
@@ -55,6 +95,9 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
           } else {
             symbol = '${mData[index - 1].symbol}';
             price = "  ";
+            if (mDataMap.containsKey(symbol)){
+              price = mDataMap[symbol];
+            }
             favorite = '';
             seq = index.toString();
           }
