@@ -56,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _counter = "0";
+  String _country = "";
 
   void _refreshPercentBTC() {
     API.getCryptoPercent("btc").then((percent) {
@@ -63,6 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
         print("--" + percent);
         var percentDouble = double.parse(percent) * 100;
         _counter = percentDouble.toStringAsFixed(2);
+      });
+    });
+  }
+
+  void _refreshCountry() {
+    API.getCountry().then((country) {
+      setState(() {
+        _country = country;
       });
     });
   }
@@ -96,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    _refreshCountry();
     _refreshPercentBTC();
   }
 
@@ -115,6 +125,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: new ListView(
         children: <Widget>[
+          new ListTile(
+            title: new Text('你来自 (' + '$_country' + ')'),
+          ),
           new ListTile(
             title: new Text('大饼占比 ' + '$_counter' + '%'),
             onTap: _gotoPercentPageBTC,

@@ -1,25 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:demo1/net/uuid.dart';
 import 'package:dio/dio.dart';
 
-import 'entry/CryptoFavorite.dart';
 import 'entry/CryptoCoinInfo.dart';
+import 'entry/CryptoFavorite.dart';
 import 'entry/CryptoPercent.dart';
 import 'entry/CryptoPlatform.dart';
 import 'entry/CryptoPlatformInfo.dart';
 import 'urls.dart';
 
-import 'package:uuid_enhanced/uuid.dart';
-
 class API {
   static Dio mDio;
 
   static Future<Dio> getDio() async {
-
     if (null == mDio) {
       /// 获取手机的UUID
-      String deviceId = Uuid.fromName('www.ashu.xyz', namespace: Uuid.NAMESPACE_URL).toString();
+      String deviceId = await GetDeviceId();
       mDio = new Dio();
       mDio.interceptors
           .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
@@ -85,37 +83,47 @@ class API {
 
   static Future<List<CryptoCoin>> getCryptoList(int page, int size) async {
     Dio dio = await getDio();
-    var response = await dio.get(ApiUrls.url_get_crypto_list, queryParameters: {"page":page, "size":size});
+    var response = await dio.get(ApiUrls.url_get_crypto_list,
+        queryParameters: {"page": page, "size": size});
     String _content = response.data.toString();
 
     List responseJson = json.decode(_content);
     List<CryptoCoin> result =
-    responseJson.map((m) => new CryptoCoin.fromJson(m)).toList();
+        responseJson.map((m) => new CryptoCoin.fromJson(m)).toList();
     return result;
   }
 
-  static Future<bool> addFavorite(String symbol) async{
+  static Future<bool> addFavorite(String symbol) async {
     Dio dio = await getDio();
-    var response = await dio.post(ApiUrls.url_post_favorite, data: FormData.from({"symbol":symbol}));
+    var response = await dio.post(ApiUrls.url_post_favorite,
+        data: FormData.from({"symbol": symbol}));
     print(response);
     return true;
   }
 
-  static Future<bool> removeFavorite(String symbol) async{
+  static Future<bool> removeFavorite(String symbol) async {
     Dio dio = await getDio();
-    var response = await dio.delete(ApiUrls.url_remove_favorite, data: FormData.from({"symbol":symbol}));
+    var response = await dio.delete(ApiUrls.url_remove_favorite,
+        data: FormData.from({"symbol": symbol}));
     print(response);
     return true;
   }
 
-  static Future<List<CryptoFavorite>> getFavorite() async{
+  static Future<List<CryptoFavorite>> getFavorite() async {
     Dio dio = await getDio();
     var response = await dio.get(ApiUrls.url_get_favorite);
     String _content = response.data.toString();
 
     List responseJson = json.decode(_content);
     List<CryptoFavorite> result =
-    responseJson.map((m) => new CryptoFavorite.fromJson(m)).toList();
+        responseJson.map((m) => new CryptoFavorite.fromJson(m)).toList();
     return result;
+  }
+
+  static Future<String> getCountry() async {
+    Dio dio = await getDio();
+    var response = await dio.get(ApiUrls.url_get_country);
+    String _content = response.data.toString();
+    return _content;
   }
 }
