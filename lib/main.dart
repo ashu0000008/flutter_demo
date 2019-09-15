@@ -6,6 +6,7 @@ import 'PercentChartPage.dart';
 import 'PlatformsPage.dart';
 import 'net/api.dart';
 import 'ws/WSManager.dart';
+import 'net/urls.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Demo'),
+      home: MyHomePage(title: 'Demo--' + ApiUrls.base_url),
       routes: {
         '/home': (context) => MyApp(),
         '/platforms/summary': (context) => PlatformsPage(),
